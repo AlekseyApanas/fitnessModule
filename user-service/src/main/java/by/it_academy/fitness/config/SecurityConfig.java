@@ -41,6 +41,11 @@ public class SecurityConfig {
                             );
                         }
                 )
+                .accessDeniedHandler((request, response, ex) -> {
+                    response.setStatus(
+                            HttpServletResponse.SC_FORBIDDEN
+                    );
+                })
                 .and();
 
         // Set permissions on endpoints

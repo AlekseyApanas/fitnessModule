@@ -10,7 +10,7 @@ public class EmailDTO {
     @NotBlank
     private String text;
 
-    public EmailDTO(String to, String subject, String text) {
+    public EmailDTO(String subject,String to, String text) {
         this.to = to;
         this.subject = subject;
         this.text = text;

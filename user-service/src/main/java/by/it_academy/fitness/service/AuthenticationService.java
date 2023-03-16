@@ -13,6 +13,14 @@ import by.it_academy.fitness.entity.UserEntity;
 import by.it_academy.fitness.service.api.user.IAuthenticationService;
 import by.it_academy.fitness.service.api.user.IUserService;
 import by.it_academy.fitness.userEnum.UserStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.core.convert.ConversionService;
@@ -20,10 +28,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class AuthenticationService implements IAuthenticationService {
 
@@ -78,33 +93,20 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     private void post(String to, String subject, String text) {
-        BufferedOutputStream bos = null;
         try {
-            URL url = new URL("http://localhost:8080/api/v1/mail");
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setDoInput(true);
-            urlConnection.setDoOutput(true);
-            urlConnection.connect();
-
             JSONObject jo = new JSONObject();
             jo.put("to", to);
             jo.put("subject", subject);
+
             jo.put("text", text);
-
-            bos = new BufferedOutputStream(urlConnection.getOutputStream());
-            bos.write(jo.toString().getBytes());
-
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                bos.flush();
-                bos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://email-service:8080/api/v1/mail"))
+                    .setHeader("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(jo.toString())).build();
+            client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (JSONException | InterruptedException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
