@@ -18,7 +18,7 @@ public class EmailService implements IEmailService {
         simpleMailMessage.setFrom("ivanivanov2023_18@mail.ru");
         simpleMailMessage.setTo(emailDTO.getTo());
         simpleMailMessage.setSubject(emailDTO.getSubject());
-        simpleMailMessage.setText("Для подтверждения перейдите по ссылке :http://localhost:8080/api/v1/users/verification?code=" + emailDTO.getText() + "&mail=" + emailDTO.getTo());
+        simpleMailMessage.setText("Для подтверждения перейдите по ссылке :http://user-mail:8080/api/v1/users/verification?code=" + emailDTO.getText() + "&mail=" + emailDTO.getTo());
         emailSender.send(simpleMailMessage);
     }
 }

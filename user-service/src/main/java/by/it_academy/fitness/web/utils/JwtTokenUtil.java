@@ -47,13 +47,6 @@ public class JwtTokenUtil {
     private static Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     }
-/*    public static String getUserMail(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
-    }*/
 
     public static Date getExpirationDate(String token) {
         Claims claims = Jwts.parser()

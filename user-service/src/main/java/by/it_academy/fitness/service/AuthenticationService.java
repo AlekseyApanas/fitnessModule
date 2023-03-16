@@ -13,9 +13,16 @@ import by.it_academy.fitness.entity.UserEntity;
 import by.it_academy.fitness.service.api.user.IAuthenticationService;
 import by.it_academy.fitness.service.api.user.IUserService;
 import by.it_academy.fitness.userEnum.UserStatus;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import java.util.UUID;
 
 public class AuthenticationService implements IAuthenticationService {
@@ -55,6 +62,7 @@ public class AuthenticationService implements IAuthenticationService {
             userEntity = dao.findByMail(userRegistrationDTO.getMail());
             userEntity.setCode(code.toString());
             dao.save(userEntity);
+            post(userRegistrationDTO.getMail(), "Verification", code.toString());
             /*emailService.sendSimpleEmail(userRegistrationDTO.getMail(), "Verification", code.toString());*/
         }
     }
@@ -69,4 +77,34 @@ public class AuthenticationService implements IAuthenticationService {
         } else throw new NotFoundException("Такого юзера не существует");
     }
 
+    private void post(String to, String subject, String text) {
+        BufferedOutputStream bos = null;
+        try {
+            URL url = new URL("http://localhost:8080/api/v1/mail");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+            urlConnection.connect();
+
+            JSONObject jo = new JSONObject();
+            jo.put("to", to);
+            jo.put("subject", subject);
+            jo.put("text", text);
+
+            bos = new BufferedOutputStream(urlConnection.getOutputStream());
+            bos.write(jo.toString().getBytes());
+
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bos.flush();
+                bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

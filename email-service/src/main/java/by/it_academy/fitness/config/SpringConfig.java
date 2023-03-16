@@ -15,6 +15,10 @@ import java.util.Properties;
 @Configuration
 public class SpringConfig {
     @Bean
+    public IEmailService iEmailService(JavaMailSender javaMailSender) {
+        return new EmailService(javaMailSender);
+    }
+    @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.mail.ru");
@@ -28,10 +32,6 @@ public class SpringConfig {
         props.put("mail.smtp.ssl.enable", "true");
         props.put("mail.debug", "true");
         return mailSender;
-    }
-    @Bean
-    public IEmailService iEmailService(JavaMailSender javaMailSender) {
-        return new EmailService(javaMailSender);
     }
 
 }

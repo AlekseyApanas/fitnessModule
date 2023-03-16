@@ -42,7 +42,7 @@ services:
     image: fitness_user-service:1.0
     networks:
       - fitness_ntwrk
-  product-email:
+  email-service:
     build: email-service
     image: fitness_email-service:1.0
     networks:
