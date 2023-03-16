@@ -95,9 +95,9 @@ public class AuthenticationService implements IAuthenticationService {
     private void post(String to, String subject, String text) {
         try {
             JSONObject jo = new JSONObject();
-            jo.put("to", to);
-            jo.put("subject", subject);
 
+            jo.put("subject", subject);
+            jo.put("to", to);
             jo.put("text", text);
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
