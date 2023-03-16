@@ -1,0 +1,12 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Fitness DB",
+      "Port": 5432,
+      "Username": "postgres",
+      "Host": "db",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "fitness"
+    }
+  }
+}
