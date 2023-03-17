@@ -1,13 +1,24 @@
 version: '3.9'
 services:
-  db:
-    build: postgresql
-    image: fitness_postgres:1.0
+  db-user:
+    build: postgresqluser
+    image: postgresqluser:1.0
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
-      POSTGRES_DB: fitness
+      POSTGRES_DB: user
+    networks:
+      - fitness_ntwrk
+
+  db-product:
+    build: postgresqlproduct
+    image: postgresqlproduct:1.0
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: product
     networks:
       - fitness_ntwrk
 
