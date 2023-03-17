@@ -9,5 +9,5 @@ public interface IAuthenticationService {
 
     void registration(UserRegistrationDTO userRegistrationDTO);
 
-    void verification(String code,String mail);
+    void verification(String code, String mail);
 }

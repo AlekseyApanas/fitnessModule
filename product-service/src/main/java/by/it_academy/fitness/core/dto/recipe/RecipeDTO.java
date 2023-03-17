@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+
 @JsonIgnoreProperties
 public class RecipeDTO {
     @JsonProperty("uuid")
@@ -26,9 +27,9 @@ public class RecipeDTO {
     private List<IngredientDTO> composition;
 
     @JsonProperty("weight")
-    private  Integer weight;
+    private Integer weight;
     @JsonProperty("calories")
-    private  Integer calories;
+    private Integer calories;
 
     @JsonProperty("proteins")
     @JsonSerialize(converter = DoubleToBigDecimalConverter.class)
@@ -44,15 +45,15 @@ public class RecipeDTO {
     }
 
     public RecipeDTO(UUID uuid,
-                       Instant dtCreate,
-                       Instant dtUpdate,
-                       String title,
-                       List<IngredientDTO> composition,
-                       Integer weight,
-                       Integer calories,
-                       Double proteins,
-                       Double fats,
-                       Double carbohydrates) {
+                     Instant dtCreate,
+                     Instant dtUpdate,
+                     String title,
+                     List<IngredientDTO> composition,
+                     Integer weight,
+                     Integer calories,
+                     Double proteins,
+                     Double fats,
+                     Double carbohydrates) {
         this.uuid = uuid;
         this.dtCreate = dtCreate;
         this.dtUpdate = dtUpdate;

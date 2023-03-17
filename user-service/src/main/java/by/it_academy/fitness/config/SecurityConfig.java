@@ -24,13 +24,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http = http.cors().and().csrf().disable();
 
-        // Set session management to stateless
         http = http
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and();
 
-        // Set unauthorized requests exception handler
         http = http
                 .exceptionHandling()
                 .authenticationEntryPoint(
@@ -48,7 +46,6 @@ public class SecurityConfig {
                 })
                 .and();
 
-        // Set permissions on endpoints
         http
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers("/api/v1/users/registration").permitAll()

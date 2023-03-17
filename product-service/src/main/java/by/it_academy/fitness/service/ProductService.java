@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 public class ProductService implements IProductService {
     private final IProductDao dao;
-
     private final ConversionService conversionService;
 
     public ProductService(IProductDao dao, ConversionService conversionService) {

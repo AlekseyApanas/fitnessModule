@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 public class RecipeService implements IRecipeService {
     private final IRecipeDao dao;
-
     private final IProductService productService;
     private final ConversionService conversionService;
 

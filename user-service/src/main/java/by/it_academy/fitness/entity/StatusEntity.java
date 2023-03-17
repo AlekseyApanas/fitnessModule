@@ -4,7 +4,7 @@ import by.it_academy.fitness.userEnum.UserStatus;
 import jakarta.persistence.*;
 
 @Entity
-@Table(schema = "fitness",name = "status")
+@Table(schema = "fitness", name = "status")
 public class StatusEntity {
     @Id
     @Enumerated(EnumType.STRING)

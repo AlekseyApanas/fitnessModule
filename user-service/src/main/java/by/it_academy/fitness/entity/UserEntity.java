@@ -54,7 +54,7 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity( String mail, String fio, String password, Instant dtCreate, Instant dtUpdate, RoleEntity role, StatusEntity status) {
+    public UserEntity(String mail, String fio, String password, Instant dtCreate, Instant dtUpdate, RoleEntity role, StatusEntity status) {
         this.mail = mail;
         this.fio = fio;
         this.password = password;

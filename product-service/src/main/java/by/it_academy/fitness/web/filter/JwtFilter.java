@@ -42,8 +42,8 @@ public class JwtFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
-        String authorities =JwtTokenUtil.extractAuthorities(token);
-        UserDetails userDetails=new UserDetails() {
+        String authorities = JwtTokenUtil.extractAuthorities(token);
+        UserDetails userDetails = new UserDetails() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
                 return List.of(new SimpleGrantedAuthority(authorities));

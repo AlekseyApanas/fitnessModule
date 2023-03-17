@@ -14,5 +14,6 @@ public interface IProductService<T> {
     PageDTO<T> get(int page, int size);
 
     void update(UpdateProductDTO productDTO);
+
     ProductDTO get(UUID id);
 }

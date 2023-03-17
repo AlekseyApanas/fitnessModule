@@ -1,6 +1,6 @@
 package by.it_academy.fitness.core.exception;
 
-public class CheckVersionException extends RuntimeException{
+public class CheckVersionException extends RuntimeException {
     public CheckVersionException() {
     }
 

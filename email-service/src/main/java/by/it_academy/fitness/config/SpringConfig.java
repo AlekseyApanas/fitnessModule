@@ -18,6 +18,7 @@ public class SpringConfig {
     public IEmailService iEmailService(JavaMailSender javaMailSender) {
         return new EmailService(javaMailSender);
     }
+
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -33,5 +34,4 @@ public class SpringConfig {
         props.put("mail.debug", "true");
         return mailSender;
     }
-
 }

@@ -1,4 +1,5 @@
 package by.it_academy.fitness.web.utils;
+
 import io.jsonwebtoken.*;
 
 
@@ -9,18 +10,19 @@ public class JwtTokenUtil {
     private static final String jwtSecret = "NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw";
     private static final String jwtIssuer = "ITAcademy";
 
-    //извлечение имени пользователя из токена (внутри валидация токена)
     public static String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-    //извлечение authorities (внутри валидация токена)
+
     public static String extractAuthorities(String token) {
-        return extractClaim(token, claims -> (String)claims.get("authorities"));
+        return extractClaim(token, claims -> (String) claims.get("authorities"));
     }
-    private static  <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+
+    private static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     private static Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     }
