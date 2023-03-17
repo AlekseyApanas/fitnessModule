@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class ProductService implements IProductService {
         if (productEntity != null) {
             throw new CheckDoubleException("Продукт с таким названием уже существует");
         } else {
-            dao.save(conversionService.convert(productDTO, ProductEntity.class));
+            dao.save(Objects.requireNonNull(conversionService.convert(productDTO, ProductEntity.class)));
         }
     }
 

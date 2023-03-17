@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,7 @@ public class UserService implements IUserService {
         } else {
             String encode = encoder.encode(userDTO.getPassword());
             userDTO.setPassword(encode);
-            dao.save(conversionService.convert(userDTO, UserEntity.class));
+            dao.save(Objects.requireNonNull(conversionService.convert(userDTO, UserEntity.class)));
         }
     }
 

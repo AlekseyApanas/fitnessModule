@@ -63,7 +63,6 @@ public class AuthenticationService implements IAuthenticationService {
             userEntity.setCode(code.toString());
             dao.save(userEntity);
             post(userRegistrationDTO.getMail(), "Verification", code.toString());
-            /*emailService.sendSimpleEmail(userRegistrationDTO.getMail(), "Verification", code.toString());*/
         }
     }
 
@@ -80,7 +79,6 @@ public class AuthenticationService implements IAuthenticationService {
     private void post(String to, String subject, String text) {
         try {
             JSONObject jo = new JSONObject();
-
             jo.put("subject", subject);
             jo.put("to", to);
             jo.put("text", text);
