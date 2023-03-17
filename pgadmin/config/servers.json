@@ -1,12 +1,20 @@
 {
   "Servers": {
     "1": {
-      "Name": "Fitness DB",
+      "Name": "User DB",
       "Port": 5432,
       "Username": "postgres",
-      "Host": "db",
+      "Host": "db-user",
       "SSLMode": "prefer",
-      "MaintenanceDB": "fitness"
+      "MaintenanceDB": "user"
+    },
+    "2": {
+      "Name": "Product DB",
+      "Port": 5432,
+      "Username": "postgres",
+      "Host": "db-product",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "product"
     }
   }
 }

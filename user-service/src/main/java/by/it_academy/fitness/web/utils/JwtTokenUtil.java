@@ -24,7 +24,6 @@ public class JwtTokenUtil {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
-    // генерация токена (кладем в него имя пользователя и authorities)
     public static String generateToken(UserDTO userDTO) {
         Map<String, Object> claims = new HashMap<>();
         String commaSeparatedListOfAuthorities=  userDTO.getAuthorities().stream().map(a->a.getAuthority()).collect(Collectors.joining(","));
@@ -32,11 +31,9 @@ public class JwtTokenUtil {
         return generateAccessToken(claims, userDTO.getUsername());
     }
 
-    //извлечение имени пользователя из токена (внутри валидация токена)
     public static String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-    //извлечение authorities (внутри валидация токена)
     public static String extractAuthorities(String token) {
         return extractClaim(token, claims -> (String)claims.get("authorities"));
     }
