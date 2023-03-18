@@ -88,7 +88,7 @@ public class AuthenticationService implements IAuthenticationService {
                     .setHeader("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jo.toString())).build();
             client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (JSONException | InterruptedException | IOException e) {
+        } catch (JSONException | IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
