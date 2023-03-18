@@ -3,7 +3,7 @@ package by.it_academy.fitness.web.controllers;
 import by.it_academy.fitness.core.dto.user.UserDTO;
 import by.it_academy.fitness.core.dto.user.UserLogInDTO;
 import by.it_academy.fitness.core.dto.user.UserRegistrationDTO;
-import by.it_academy.fitness.service.UserHolder;
+import by.it_academy.fitness.web.utils.UserHolder;
 import by.it_academy.fitness.service.api.user.IAuthenticationService;
 import by.it_academy.fitness.web.utils.JwtTokenUtil;
 import jakarta.validation.Valid;

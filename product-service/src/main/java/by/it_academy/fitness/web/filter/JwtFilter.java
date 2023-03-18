@@ -1,5 +1,6 @@
 package by.it_academy.fitness.web.filter;
 
+import by.it_academy.fitness.core.dto.audit.UserDTO;
 import by.it_academy.fitness.web.utils.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import static org.apache.logging.log4j.util.Strings.isEmpty;
 
@@ -43,45 +45,15 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
         String authorities = JwtTokenUtil.extractAuthorities(token);
-        UserDetails userDetails = new UserDetails() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return List.of(new SimpleGrantedAuthority(authorities));
-            }
-
-            @Override
-            public String getPassword() {
-                return null;
-            }
-
-            @Override
-            public String getUsername() {
-                return JwtTokenUtil.extractUsername(token);
-            }
-
-            @Override
-            public boolean isAccountNonExpired() {
-                return false;
-            }
-
-            @Override
-            public boolean isAccountNonLocked() {
-                return false;
-            }
-
-            @Override
-            public boolean isCredentialsNonExpired() {
-                return false;
-            }
-
-            @Override
-            public boolean isEnabled() {
-                return false;
-            }
-        };
+        String uuid = JwtTokenUtil.extractUUID(token);
+        String fio = JwtTokenUtil.extractFio(token);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setRole(authorities);
+        userDTO.setFio(fio);
+        userDTO.setUuid(UUID.fromString(uuid));
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
+                userDTO, null, userDTO.getAuthorities());
 
 
         authentication.setDetails(

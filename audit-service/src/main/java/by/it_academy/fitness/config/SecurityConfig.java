@@ -48,7 +48,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/api/v1/audit/**").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/v1/audit/**").permitAll()/*hasAnyAuthority("ROLE_ADMIN")*/
                 )
                 .httpBasic(withDefaults());
         http.addFilterBefore(

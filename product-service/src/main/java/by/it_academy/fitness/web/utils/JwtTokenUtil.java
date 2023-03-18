@@ -17,6 +17,12 @@ public class JwtTokenUtil {
     public static String extractAuthorities(String token) {
         return extractClaim(token, claims -> (String) claims.get("authorities"));
     }
+    public static String extractUUID(String token) {
+        return extractClaim(token, claims -> (String) claims.get("uuid"));
+    }
+    public static String extractFio(String token) {
+        return extractClaim(token, claims -> (String) claims.get("fio"));
+    }
 
     private static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);

@@ -1,4 +1,4 @@
-package by.it_academy.fitness.service;
+package by.it_academy.fitness.web.utils;
 
 import by.it_academy.fitness.core.dto.user.UserDTO;
 import org.springframework.security.core.context.SecurityContextHolder;

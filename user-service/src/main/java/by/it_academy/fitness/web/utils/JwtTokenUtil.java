@@ -2,6 +2,7 @@ package by.it_academy.fitness.web.utils;
 
 import by.it_academy.fitness.core.dto.user.UserDTO;
 import io.jsonwebtoken.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class JwtTokenUtil {
     private static final String jwtSecret = "NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw";
     private static final String jwtIssuer = "ITAcademy";
 
-    public static String generateAccessToken(Map<String,Object> claims,String name) {
+    public static String generateAccessToken(Map<String, Object> claims, String name) {
         return Jwts.builder().setClaims(claims)
                 .setSubject(name)
                 .setIssuer(jwtIssuer)
@@ -24,23 +25,25 @@ public class JwtTokenUtil {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
+
     public static String generateToken(UserDTO userDTO) {
         Map<String, Object> claims = new HashMap<>();
-        String commaSeparatedListOfAuthorities=  userDTO.getAuthorities().stream().map(a->a.getAuthority()).collect(Collectors.joining(","));
+        String commaSeparatedListOfAuthorities = userDTO.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
         claims.put("authorities", commaSeparatedListOfAuthorities);
+        claims.put("uuid", userDTO.getUuid());
+        claims.put("fio", userDTO.getFio());
         return generateAccessToken(claims, userDTO.getUsername());
     }
 
     public static String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-    public static String extractAuthorities(String token) {
-        return extractClaim(token, claims -> (String)claims.get("authorities"));
-    }
-    private static  <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+
+    private static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     private static Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     }
