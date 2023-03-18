@@ -15,6 +15,14 @@
       "Host": "db-product",
       "SSLMode": "prefer",
       "MaintenanceDB": "product"
+    },
+    "3": {
+      "Name": "Audit DB",
+      "Port": 5432,
+      "Username": "postgres",
+      "Host": "db-audit",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "audit"
     }
   }
 }

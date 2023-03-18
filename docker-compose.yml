@@ -22,6 +22,17 @@ services:
     networks:
       - fitness_ntwrk
 
+  db-audit:
+    build: postgresqlaudit
+    image: postgresqlaudit:1.0
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: audit
+    networks:
+      - fitness_ntwrk
+
   pgadmin:
     build: pgadmin
     image: fitness_pgadmin:1.0
@@ -53,6 +64,13 @@ services:
     image: fitness_user-service:1.0
     networks:
       - fitness_ntwrk
+
+  audit-service:
+    build: audit-service
+    image: fitness_audit-service:1.0
+    networks:
+      - fitness_ntwrk
+
   email-service:
     build: email-service
     image: fitness_email-service:1.0
