@@ -3,7 +3,6 @@ package by.it_academy.fitness.service;
 import by.it_academy.fitness.core.dto.audit.UserDTO;
 import by.it_academy.fitness.core.dto.audit.UserHolder;
 import by.it_academy.fitness.core.dto.page.PageDTO;
-import by.it_academy.fitness.core.dto.product.ProductDTO;
 import by.it_academy.fitness.core.dto.recipe.AddRecipeDTO;
 import by.it_academy.fitness.core.dto.recipe.RecipeDTO;
 import by.it_academy.fitness.core.dto.recipe.SavedRecipeDTO;
@@ -122,7 +121,7 @@ public class RecipeService implements IRecipeService {
     private void sendAudit(UserDTO userDto, UUID uuid, String actions) {
         try {
             JSONObject user = new JSONObject();
-            user.put("uuid", userDto.getUuid());
+            user.put("uuidUser", userDto.getUuid());
             user.put("mail", userDto.getMail());
             user.put("fio", userDto.getFio());
             user.put("role", userDto.getRole());
@@ -133,7 +132,7 @@ public class RecipeService implements IRecipeService {
             object.put("uuidService", uuid);
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost/api/v1/audit"))
+                    .uri(URI.create("http://audit-service:8080/api/v1/audit"))
                     .setHeader("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(object.toString())).build();
 

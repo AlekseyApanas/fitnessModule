@@ -13,12 +13,12 @@ public class AuditEntityToAuditDTO implements Converter<AuditEntity, AuditDTO> {
     public AuditDTO convert(AuditEntity auditEntity) {
         return new AuditDTO(auditEntity.getUuid(),
                 auditEntity.getDtCreate(),
-                new UserDTO(auditEntity.getUserEntity().getUuid(),
-                        auditEntity.getUserEntity().getMail(),
-                        auditEntity.getUserEntity().getFio(),
-                        auditEntity.getUserEntity().getRole().getRole()),
+                new UserDTO(auditEntity.getUuidUser(),
+                        auditEntity.getMail(),
+                        auditEntity.getFio(),
+                        auditEntity.getRole()),
                 auditEntity.getText(),
-                auditEntity.getType().getType(),
+                auditEntity.getType(),
                 auditEntity.getUuidService());
     }
 }

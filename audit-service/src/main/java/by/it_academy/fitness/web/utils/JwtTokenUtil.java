@@ -1,34 +1,13 @@
 package by.it_academy.fitness.web.utils;
 
-import by.it_academy.fitness.core.dto.user.UserDTO;
 import io.jsonwebtoken.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class JwtTokenUtil {
 
     private static final String jwtSecret = "NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw";
-    private static final String jwtIssuer = "ITAcademy";
 
-    public static String generateAccessToken(Map<String,Object> claims,String name) {
-        return Jwts.builder().setClaims(claims)
-                .setSubject(name)
-                .setIssuer(jwtIssuer)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7))) // 1 week
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
-    }
-
-
-    public static String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
     public static String extractAuthorities(String token) {
         return extractClaim(token, claims -> (String)claims.get("authorities"));
     }
@@ -38,15 +17,6 @@ public class JwtTokenUtil {
     }
     private static Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
-    }
-
-    public static Date getExpirationDate(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.getExpiration();
     }
 
     public static boolean validate(String token) {

@@ -1,10 +1,12 @@
 package by.it_academy.fitness.core.dto.user;
 
 import by.it_academy.fitness.core.converter.InstantToLongConverter;
+import by.it_academy.fitness.core.dto.exception.validator.ValueOfEnum;
 import by.it_academy.fitness.userEnum.EntityType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 
 import java.time.Instant;
@@ -17,12 +19,13 @@ public class AuditDTO {
     @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
     @JsonProperty("dtCreate")
     private Instant dtCreate;
+    @NotNull
     @JsonProperty("user")
     private UserDTO user;
     @NotBlank
     @JsonProperty("text")
     private String text;
-/*    @ValueOfEnum(enumClass = EntityType.class)*/
+
     @JsonProperty("type")
     private EntityType type;
     @NotBlank

@@ -49,7 +49,7 @@ public class UserDTO implements UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + getRole()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
     @JsonIgnore

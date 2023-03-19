@@ -1,5 +1,7 @@
 package by.it_academy.fitness.entity;
 
+import by.it_academy.fitness.userEnum.EntityType;
+import by.it_academy.fitness.userEnum.UserRole;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -15,33 +17,45 @@ public class AuditEntity {
     private UUID uuid;
     @Column(name = "dt_create")
     private Instant dtCreate;
-    @ManyToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(
-            name = "user_uuid"
-    )
-    private UserEntity userEntity;
+
+    @Column(name = "uuidUser")
+    private UUID uuidUser;
+    @Column(name = "mail")
+    private String mail;
+    @Column(name = "fio")
+    private String fio;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "entity")
+    private UserRole role;
     @Column(name = "text")
     private String text;
     @Enumerated(EnumType.STRING)
-    @ManyToOne(cascade = {CascadeType.ALL})
-    @JoinTable(schema = "fitness",
-            name = "user_type",
-            joinColumns =
-            @JoinColumn(name = "audit_uuid"),
-            inverseJoinColumns =
-            @JoinColumn(name = "type_id")
-    )
-    private TypeEntity type;
+    @Column(name = "type")
+    private EntityType type;
     @Column(name = "uuidService")
     private String uuidService;
+
+    public AuditEntity(UUID uuid, Instant dtCreate, UUID uuidUser, String mail, String fio, UserRole role, String text, EntityType type, String uuidService) {
+        this.uuid = uuid;
+        this.dtCreate = dtCreate;
+        this.uuidUser = uuidUser;
+        this.mail = mail;
+        this.fio = fio;
+        this.role = role;
+        this.text = text;
+        this.type = type;
+        this.uuidService = uuidService;
+    }
 
     public AuditEntity() {
     }
 
-    public AuditEntity(Instant dtCreate, UserEntity userEntity, String text, TypeEntity type, String uuidService) {
-
+    public AuditEntity(Instant dtCreate, UUID uuidUser, String mail, String fio, UserRole role, String text, EntityType type, String uuidService) {
         this.dtCreate = dtCreate;
-        this.userEntity = userEntity;
+        this.uuidUser = uuidUser;
+        this.mail = mail;
+        this.fio = fio;
+        this.role = role;
         this.text = text;
         this.type = type;
         this.uuidService = uuidService;
@@ -55,15 +69,27 @@ public class AuditEntity {
         return dtCreate;
     }
 
-    public UserEntity getUserEntity() {
-        return userEntity;
+    public UUID getUuidUser() {
+        return uuidUser;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public String getFio() {
+        return fio;
+    }
+
+    public UserRole getRole() {
+        return role;
     }
 
     public String getText() {
         return text;
     }
 
-    public TypeEntity getType() {
+    public EntityType getType() {
         return type;
     }
 

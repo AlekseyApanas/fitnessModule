@@ -53,10 +53,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers(HttpMethod.GET, "/api/v1/product").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/v1/recipe").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/product/**").hasAnyAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/recipe/**").hasAnyAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/product/**").hasAnyAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/recipe/**").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/product/**").hasRole("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/recipe/**").hasRole("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/product/**").hasRole("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/recipe/**").hasRole("ROLE_ADMIN")
                 )
                 .httpBasic(withDefaults());
         http.addFilterBefore(

@@ -24,8 +24,8 @@ public class SpringConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.mail.ru");
         mailSender.setPort(465);
-        mailSender.setUsername("ivanivanov2023_18@mail.ru");
-        mailSender.setPassword("CzgX7LYBBE0GfaQPrZL6");
+        mailSender.setUsername("qwertyuikscldsfbsjhdv@mail.ru");
+        mailSender.setPassword("wCsLnzkU32i9NHRm8kzE");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtps");

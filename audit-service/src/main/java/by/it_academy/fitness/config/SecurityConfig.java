@@ -4,6 +4,7 @@ import by.it_academy.fitness.web.filter.JwtFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -48,7 +49,9 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/api/v1/audit/**").permitAll()/*hasAnyAuthority("ROLE_ADMIN")*/
+                        .requestMatchers(HttpMethod.POST,"/api/v1/audit").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/audit").hasRole("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/v1/audit/{uuid}").hasRole("ROLE_ADMIN")
                 )
                 .httpBasic(withDefaults());
         http.addFilterBefore(
