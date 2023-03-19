@@ -1,7 +1,5 @@
 package by.it_academy.fitness.service;
 
-import by.it_academy.fitness.core.dto.audit.UserDTO;
-import by.it_academy.fitness.core.dto.audit.UserHolder;
 import by.it_academy.fitness.core.dto.page.PageDTO;
 import by.it_academy.fitness.core.dto.recipe.AddRecipeDTO;
 import by.it_academy.fitness.core.dto.recipe.RecipeDTO;
@@ -26,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class RecipeService implements IRecipeService {
@@ -53,10 +52,10 @@ public class RecipeService implements IRecipeService {
                     .map(s -> new IngredientEntity(conversionService.convert(productService.get(s.getProduct()), ProductEntity.class),
                             s.getWeight())).collect(Collectors.toList());
             SavedRecipeDTO savedRecipeDTO = new SavedRecipeDTO(recipeDTO);
-            dao.save(new RecipeEntity(savedRecipeDTO.getDtCreate(),
+            dao.save(new RecipeEntity(savedRecipeDTO.getUuid(), savedRecipeDTO.getDtCreate(),
                     savedRecipeDTO.getDtUpdate(), savedRecipeDTO.getAddRecipeDTO().getTitle(),
                     list));
-            iAuditService.checkUserAndSend("Создана запись в журнале рецептов");
+            iAuditService.checkUserAndSend("Создана запись в журнале рецептов", "RECIPE", savedRecipeDTO.getUuid());
         }
     }
 
@@ -101,7 +100,7 @@ public class RecipeService implements IRecipeService {
             recipeEntity.setComposition(list);
             dao.save(recipeEntity);
         } else throw new CheckVersionException("Такой версии не существует");
-        iAuditService.checkUserAndSend("Обновлена запись в журнале рецептов");
+        iAuditService.checkUserAndSend("Обновлена запись в журнале рецептов", "RECIPE", recipeDTO.getUuid());
     }
 
     private void checkIngredient(List<AddIngredientDTO> addIngredientDTOS) {

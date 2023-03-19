@@ -1,7 +1,7 @@
 package by.it_academy.fitness.service;
 
 import by.it_academy.fitness.core.dto.audit.UserDTO;
-import by.it_academy.fitness.core.dto.audit.UserHolder;
+import by.it_academy.fitness.web.utils.UserHolder;
 import by.it_academy.fitness.service.api.product.IAuditService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,25 +15,25 @@ import java.util.UUID;
 
 public class AuditService implements IAuditService {
     @Override
-    public void checkUserAndSend(String actions) {
+    public void checkUserAndSend(String actions,String type,UUID uuidService ) {
         UserHolder userHolder = new UserHolder();
         UserDTO user = userHolder.getUser();
-        send(user, user.getUuid(), actions);
+        send(user, actions,type,uuidService);
     }
 
 
-    private void send(UserDTO userDto, UUID uuid, String actions) {
+    private void send(UserDTO userDto, String actions,String type,UUID uuidService) {
         try {
             JSONObject user = new JSONObject();
             user.put("uuidUser", userDto.getUuid());
             user.put("mail", userDto.getMail());
             user.put("fio", userDto.getFio());
-            user.put("role", userDto.getRole());
+            user.put("role", userDto.getRole().substring(5));
             JSONObject object = new JSONObject();
             object.put("user", user);
             object.put("text", actions);
-            object.put("type", "USER");
-            object.put("uuidService", uuid);
+            object.put("type",type);
+            object.put("uuidService", uuidService);
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("http://audit-service:8080/api/v1/audit"))

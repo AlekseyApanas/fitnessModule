@@ -46,10 +46,12 @@ public class JwtFilter extends OncePerRequestFilter {
         String authorities = jwtTokenUtil.extractAuthorities(token);
         String uuid = jwtTokenUtil.extractUUID(token);
         String fio = jwtTokenUtil.extractFio(token);
+        String mail = jwtTokenUtil.extractUsername(token);
         UserDTO userDTO = new UserDTO();
         userDTO.setRole(authorities);
         userDTO.setFio(fio);
         userDTO.setUuid(UUID.fromString(uuid));
+        userDTO.setMail(mail);
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(
                 userDTO, null, userDTO.getAuthorities());

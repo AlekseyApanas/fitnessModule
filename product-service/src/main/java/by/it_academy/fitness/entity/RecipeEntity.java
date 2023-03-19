@@ -13,7 +13,6 @@ import java.util.UUID;
 public class RecipeEntity {
     @Id
     @Column(name = "uuid")
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
     @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
     @Column(name = "dt_create")
@@ -44,13 +43,6 @@ public class RecipeEntity {
         this.composition = composition;
     }
 
-
-    public RecipeEntity(Instant dtCreate, Instant dtUpdate, String title, List<IngredientEntity> composition) {
-        this.dtCreate = dtCreate;
-        this.dtUpdate = dtUpdate;
-        this.title = title;
-        this.composition = composition;
-    }
 
     public UUID getUuid() {
         return uuid;

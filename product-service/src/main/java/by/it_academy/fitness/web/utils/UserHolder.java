@@ -1,5 +1,6 @@
-package by.it_academy.fitness.core.dto.audit;
+package by.it_academy.fitness.web.utils;
 
+import by.it_academy.fitness.core.dto.audit.UserDTO;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 

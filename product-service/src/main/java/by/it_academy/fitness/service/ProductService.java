@@ -39,7 +39,8 @@ public class ProductService implements IProductService {
         } else {
             dao.save(Objects.requireNonNull(conversionService.convert(productDTO, ProductEntity.class)));
         }
-        iAuditService.checkUserAndSend("Создана запись в журнале продуктов");
+        UUID uuidProduct = getUUID(productDTO.getTitle());
+        iAuditService.checkUserAndSend("Создана запись в журнале продуктов", "PRODUCT", uuidProduct);
     }
 
     @Override
@@ -64,12 +65,19 @@ public class ProductService implements IProductService {
             productEntity.setCarbohydrates(productDTO.getAddProductDTO().getCarbohydrates());
             dao.save(productEntity);
         } else throw new CheckVersionException("Такой версии не существует");
-        iAuditService.checkUserAndSend("Обновлена запись в журнале продуктов");
+        UUID uuidProduct = getUUID(productDTO.getAddProductDTO().getTitle());
+        iAuditService.checkUserAndSend("Обновлена запись в журнале продуктов", "PRODUCT", uuidProduct);
     }
 
     @Override
     public ProductDTO get(UUID id) {
         ProductEntity productEntity = this.dao.findById(id).orElseThrow(() -> new NotFoundException("Такого продукта не существует"));
         return conversionService.convert(productEntity, ProductDTO.class);
+    }
+
+    private UUID getUUID(String title) {
+        ProductEntity productAudit = dao.findByTitle(title);
+        ProductDTO productDTOAudit = conversionService.convert(productAudit, ProductDTO.class);
+        return Objects.requireNonNull(productDTOAudit).getUuid();
     }
 }
