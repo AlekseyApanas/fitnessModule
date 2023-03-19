@@ -3,9 +3,9 @@ package by.it_academy.fitness.web.controllers;
 import by.it_academy.fitness.core.dto.user.UserDTO;
 import by.it_academy.fitness.core.dto.user.UserLogInDTO;
 import by.it_academy.fitness.core.dto.user.UserRegistrationDTO;
-import by.it_academy.fitness.web.utils.UserHolder;
 import by.it_academy.fitness.service.api.user.IAuthenticationService;
 import by.it_academy.fitness.web.utils.JwtTokenUtil;
+import by.it_academy.fitness.web.utils.UserHolder;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/users")
 public class AuthenticationController {
     private IAuthenticationService service;
-    private UserHolder userHolder;
+    private JwtTokenUtil jwtTokenUtil;
 
-    public AuthenticationController(IAuthenticationService service, UserHolder userHolder) {
+    public AuthenticationController(IAuthenticationService service, JwtTokenUtil jwtTokenUtil) {
         this.service = service;
-        this.userHolder = userHolder;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
     @RequestMapping(path = "/registration", method = RequestMethod.POST)
@@ -41,12 +41,13 @@ public class AuthenticationController {
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public ResponseEntity<String> logIn(@RequestBody @Valid UserLogInDTO userLogInDTO) {
-       UserDTO userDTO= service.logIn(userLogInDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(JwtTokenUtil.generateToken(userDTO));
+        UserDTO userDTO = service.logIn(userLogInDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(jwtTokenUtil.generateToken(userDTO));
     }
 
     @RequestMapping(path = "/me", method = RequestMethod.GET)
     public ResponseEntity<UserDTO> get() {
+        UserHolder userHolder = new UserHolder();
         return ResponseEntity.status(HttpStatus.OK).body(userHolder.getUser());
     }
 }

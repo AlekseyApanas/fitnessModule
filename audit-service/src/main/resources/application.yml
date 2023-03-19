@@ -3,7 +3,7 @@ spring:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://db-audit:5432/audit
@@ -11,3 +11,6 @@ spring:
     username: postgres
     password: 12345
     # password: 2505573
+jwt:
+  secret: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw
+  issuer: ITAcademy

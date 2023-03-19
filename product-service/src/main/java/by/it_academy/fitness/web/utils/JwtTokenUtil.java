@@ -1,41 +1,49 @@
 package by.it_academy.fitness.web.utils;
 
+import by.it_academy.fitness.web.utils.properties.JWTProperty;
 import io.jsonwebtoken.*;
+import org.springframework.stereotype.Component;
 
 
 import java.util.function.Function;
 
+@Component
 public class JwtTokenUtil {
 
-    private static final String jwtSecret = "NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw";
-    private static final String jwtIssuer = "ITAcademy";
+    private final JWTProperty property;
 
-    public static String extractUsername(String token) {
+    public JwtTokenUtil(JWTProperty property) {
+        this.property = property;
+    }
+
+    public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public static String extractAuthorities(String token) {
+    public String extractAuthorities(String token) {
         return extractClaim(token, claims -> (String) claims.get("authorities"));
     }
-    public static String extractUUID(String token) {
+
+    public String extractUUID(String token) {
         return extractClaim(token, claims -> (String) claims.get("uuid"));
     }
-    public static String extractFio(String token) {
+
+    public String extractFio(String token) {
         return extractClaim(token, claims -> (String) claims.get("fio"));
     }
 
-    private static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    private static Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser().setSigningKey(property.getSecret()).parseClaimsJws(token).getBody();
     }
 
-    public static boolean validate(String token) {
+    public boolean validate(String token) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(property.getSecret()).parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException ex) {
             //logger.error("Invalid JWT token - {}", ex.getMessage());

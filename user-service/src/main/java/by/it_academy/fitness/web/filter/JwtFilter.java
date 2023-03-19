@@ -23,9 +23,11 @@ import static org.apache.logging.log4j.util.Strings.isEmpty;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final IUserService userService;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    public JwtFilter(IUserService userService) {
+    public JwtFilter(IUserService userService, JwtTokenUtil jwtTokenUtil) {
         this.userService = userService;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
     @Override
@@ -40,11 +42,11 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
         final String token = header.split(" ")[1].trim();
-        if (!JwtTokenUtil.validate(token)) {
+        if (!jwtTokenUtil.validate(token)) {
             chain.doFilter(request, response);
             return;
         }
-        UserDTO userDTO = userService.getUser(JwtTokenUtil.extractUsername(token));
+        UserDTO userDTO = userService.getUser(jwtTokenUtil.extractUsername(token));
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(
                 userDTO, null, userDTO.getAuthorities());

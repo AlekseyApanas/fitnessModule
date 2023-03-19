@@ -19,7 +19,11 @@ import static org.apache.logging.log4j.util.Strings.isEmpty;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
+    private final JwtTokenUtil jwtTokenUtil;
 
+    public JwtFilter(JwtTokenUtil jwtTokenUtil) {
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -33,11 +37,11 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
         final String token = header.split(" ")[1].trim();
-        if (!JwtTokenUtil.validate(token)) {
+        if (!jwtTokenUtil.validate(token)) {
             chain.doFilter(request, response);
             return;
         }
-        String authorities = JwtTokenUtil.extractAuthorities(token);
+        String authorities = jwtTokenUtil.extractAuthorities(token);
         UserDTO userDTO = new UserDTO();
         userDTO.setRole(authorities);
         UsernamePasswordAuthenticationToken
