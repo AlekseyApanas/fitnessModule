@@ -1,7 +1,6 @@
 package by.it_academy.fitness.core.dto.user;
 
 import by.it_academy.fitness.core.converter.InstantToLongConverter;
-import by.it_academy.fitness.core.dto.exception.validator.ValueOfEnum;
 import by.it_academy.fitness.userEnum.EntityType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

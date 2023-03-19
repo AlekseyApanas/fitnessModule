@@ -1,6 +1,5 @@
 package by.it_academy.fitness.core.dto.user;
 
-import by.it_academy.fitness.core.dto.exception.validator.ValueOfEnum;
 import by.it_academy.fitness.userEnum.UserRole;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;

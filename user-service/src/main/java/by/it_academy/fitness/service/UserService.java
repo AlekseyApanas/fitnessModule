@@ -11,21 +11,13 @@ import by.it_academy.fitness.dao.api.user.IUserDao;
 import by.it_academy.fitness.entity.RoleEntity;
 import by.it_academy.fitness.entity.StatusEntity;
 import by.it_academy.fitness.entity.UserEntity;
+import by.it_academy.fitness.service.api.user.IAuditService;
 import by.it_academy.fitness.service.api.user.IUserService;
-import by.it_academy.fitness.web.utils.UserHolder;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -37,13 +29,14 @@ public class UserService implements IUserService {
     private final IUserDao dao;
     private final ConversionService conversionService;
     private final PasswordEncoder encoder;
+    private final IAuditService iAuditService;
 
-    public UserService(IUserDao dao, ConversionService conversionService, PasswordEncoder encoder) {
+    public UserService(IUserDao dao, ConversionService conversionService, PasswordEncoder encoder, IAuditService iAuditService) {
         this.dao = dao;
         this.conversionService = conversionService;
         this.encoder = encoder;
+        this.iAuditService = iAuditService;
     }
-
 
     @Override
     public void create(AddUserDTO userDTO) {
@@ -56,7 +49,8 @@ public class UserService implements IUserService {
             userEntity = conversionService.convert(userDTO, UserEntity.class);
             dao.save(Objects.requireNonNull(userEntity));
         }
-        checkUserAndSend(userDTO.getMail(), "Создана запись в журнале пользователей");
+        UserDTO userAudit = getUser(userDTO.getMail());
+        iAuditService.checkUserAndSend(userDTO.getMail(), "Создана запись в журнале пользователей", userAudit);
     }
 
     @Override
@@ -86,8 +80,9 @@ public class UserService implements IUserService {
             userEntity.setRole(new RoleEntity(updateUserDto.getUserDTO().getRole()));
             userEntity.setStatus(new StatusEntity(updateUserDto.getUserDTO().getStatus()));
             dao.save(userEntity);
-            checkUserAndSend(updateUserDto.getUserDTO().getMail(), "Обновлена запись в журнале пользователей");
         } else throw new CheckVersionException("Такой версии не существует");
+        UserDTO userAudit = getUser(updateUserDto.getUserDTO().getMail());
+        iAuditService.checkUserAndSend(updateUserDto.getUserDTO().getMail(), "Обновлена запись в журнале пользователей", userAudit);
     }
 
     @Override
@@ -97,36 +92,5 @@ public class UserService implements IUserService {
             throw new NotFoundException("Такого юзера не существует");
         }
         return conversionService.convert(userEntity, UserDTO.class);
-    }
-
-    private void checkUserAndSend(String mail, String actions) {
-        UserHolder userHolder = new UserHolder();
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDTO user = principal instanceof String ? getUser(mail) : userHolder.getUser();
-        sendAudit(getUser(mail), user.getUuid(), actions);
-    }
-
-    private void sendAudit(UserDTO userDto, UUID uuid, String actions) {
-        try {
-            JSONObject user = new JSONObject();
-            user.put("uuidUser", userDto.getUuid());
-            user.put("mail", userDto.getMail());
-            user.put("fio", userDto.getFio());
-            user.put("role", userDto.getRole());
-            JSONObject object = new JSONObject();
-            object.put("user", user);
-            object.put("text", actions);
-            object.put("type", "USER");
-            object.put("uuidService", uuid);
-            HttpClient httpClient = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://audit-service:8080/api/v1/audit"))
-                    .setHeader("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(object.toString())).build();
-
-            httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (JSONException | IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

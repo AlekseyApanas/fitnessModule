@@ -16,34 +16,29 @@ import by.it_academy.fitness.dao.api.product.IRecipeDao;
 import by.it_academy.fitness.entity.IngredientEntity;
 import by.it_academy.fitness.entity.ProductEntity;
 import by.it_academy.fitness.entity.RecipeEntity;
+import by.it_academy.fitness.service.api.product.IAuditService;
 import by.it_academy.fitness.service.api.product.IProductService;
 import by.it_academy.fitness.service.api.product.IRecipeService;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class RecipeService implements IRecipeService {
     private final IRecipeDao dao;
     private final IProductService productService;
     private final ConversionService conversionService;
+    private final IAuditService iAuditService;
 
-    public RecipeService(IRecipeDao dao, IProductService productService, ConversionService conversionService) {
+    public RecipeService(IRecipeDao dao, IProductService productService, ConversionService conversionService, IAuditService iAuditService) {
         this.dao = dao;
         this.productService = productService;
         this.conversionService = conversionService;
+        this.iAuditService = iAuditService;
     }
 
     @Override
@@ -61,7 +56,7 @@ public class RecipeService implements IRecipeService {
             dao.save(new RecipeEntity(savedRecipeDTO.getDtCreate(),
                     savedRecipeDTO.getDtUpdate(), savedRecipeDTO.getAddRecipeDTO().getTitle(),
                     list));
-            checkUserAndSend("Создана запись в журнале рецептов");
+            iAuditService.checkUserAndSend("Создана запись в журнале рецептов");
         }
     }
 
@@ -106,39 +101,10 @@ public class RecipeService implements IRecipeService {
             recipeEntity.setComposition(list);
             dao.save(recipeEntity);
         } else throw new CheckVersionException("Такой версии не существует");
-        checkUserAndSend("Обновлена запись в журнале рецептов");
+        iAuditService.checkUserAndSend("Обновлена запись в журнале рецептов");
     }
 
     private void checkIngredient(List<AddIngredientDTO> addIngredientDTOS) {
         addIngredientDTOS.forEach(s -> productService.get(s.getProduct()));
-    }
-    private void checkUserAndSend(String actions) {
-        UserHolder userHolder = new UserHolder();
-        UserDTO user = userHolder.getUser();
-        sendAudit(user, user.getUuid(), actions);
-    }
-
-    private void sendAudit(UserDTO userDto, UUID uuid, String actions) {
-        try {
-            JSONObject user = new JSONObject();
-            user.put("uuidUser", userDto.getUuid());
-            user.put("mail", userDto.getMail());
-            user.put("fio", userDto.getFio());
-            user.put("role", userDto.getRole());
-            JSONObject object = new JSONObject();
-            object.put("user", user);
-            object.put("text", actions);
-            object.put("type", "USER");
-            object.put("uuidService", uuid);
-            HttpClient httpClient = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://audit-service:8080/api/v1/audit"))
-                    .setHeader("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(object.toString())).build();
-
-            httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (JSONException | IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
