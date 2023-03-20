@@ -3,8 +3,8 @@ package by.it_academy.fitness.core.dto.exception;
 import java.util.List;
 
 public class MultipleErrorResponseDTO {
-    String logref;
-    List<MyExceptionDTO> errors;
+    private String logref;
+    private List<MyExceptionDTO> errors;
 
     public MultipleErrorResponseDTO(String logref, List<MyExceptionDTO> errors) {
         this.logref = logref;

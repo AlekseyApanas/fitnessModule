@@ -2,7 +2,6 @@ package by.it_academy.fitness.web.controllers;
 
 
 import by.it_academy.fitness.core.dto.user.AuditDTO;
-import by.it_academy.fitness.core.dto.user.UserDTO;
 import by.it_academy.fitness.core.dto.page.PageDTO;
 
 import by.it_academy.fitness.service.api.user.IAuditService;
