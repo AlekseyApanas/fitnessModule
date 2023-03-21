@@ -11,6 +11,10 @@ spring:
     username: postgres
     password: 12345
     #   password: 2505573
+  data:
+   redis:
+     urlemail: http://email-service:8080/api/v1/mail
+     urlaudit: http://audit-service:8080/api/v1/audit
 jwt:
   secret: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw
   issuer: ITAcademy

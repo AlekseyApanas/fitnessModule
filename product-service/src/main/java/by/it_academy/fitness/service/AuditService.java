@@ -5,6 +5,7 @@ import by.it_academy.fitness.web.utils.UserHolder;
 import by.it_academy.fitness.service.api.product.IAuditService;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.net.URI;
@@ -14,6 +15,8 @@ import java.net.http.HttpResponse;
 import java.util.UUID;
 
 public class AuditService implements IAuditService {
+    @Value("${spring.data.redis.urlaudit}")
+    private String url;
     @Override
     public void checkUserAndSend(String actions,String type,UUID uuidService ) {
         UserHolder userHolder = new UserHolder();
@@ -36,7 +39,7 @@ public class AuditService implements IAuditService {
             object.put("uuidService", uuidService);
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://audit-service:8080/api/v1/audit"))
+                    .uri(URI.create(url))
                     .setHeader("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(object.toString())).build();
 

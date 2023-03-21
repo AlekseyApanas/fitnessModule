@@ -15,6 +15,7 @@ import by.it_academy.fitness.service.api.user.IUserService;
 import by.it_academy.fitness.userEnum.UserStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -26,7 +27,8 @@ import java.net.http.HttpResponse;
 import java.util.UUID;
 
 public class AuthenticationService implements IAuthenticationService {
-
+    @Value("${spring.data.redis.urlemail}")
+    private String url;
     private final IAuthenticationDao dao;
     private final ConversionService conversionService;
     private final BCryptPasswordEncoder encoder;
@@ -84,7 +86,7 @@ public class AuthenticationService implements IAuthenticationService {
             jo.put("text", text);
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://email-service:8080/api/v1/mail"))
+                    .uri(URI.create(url))
                     .setHeader("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jo.toString())).build();
             client.send(request, HttpResponse.BodyHandlers.ofString());
