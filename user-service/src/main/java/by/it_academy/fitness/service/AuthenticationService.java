@@ -42,7 +42,7 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     public UserDTO logIn(UserLogInDTO userLogInDTO) {
-        UserEntity userEntity = dao.findByMail(userLogInDTO.getMail());
+        UserEntity userEntity = dao.findByMail(userLogInDTO.getMail().toLowerCase());
         if (userEntity == null) {
             throw new NotFoundException("Такого юзера не существует");
         }
@@ -55,22 +55,22 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public void registration(UserRegistrationDTO userRegistrationDTO) {
-        UserEntity userEntity = dao.findByMail(userRegistrationDTO.getMail());
+        UserEntity userEntity = dao.findByMail(userRegistrationDTO.getMail().toLowerCase());
         if (userEntity != null) {
             throw new CheckDoubleException("Юзер с таким mail уже существует");
         } else {
-            iUserService.create(new AddUserDTO(userRegistrationDTO.getMail(), userRegistrationDTO.getFio(), userRegistrationDTO.getPassword()));
+            iUserService.create(new AddUserDTO(userRegistrationDTO.getMail().toLowerCase(), userRegistrationDTO.getFio(), userRegistrationDTO.getPassword()));
             UUID code = UUID.randomUUID();
-            userEntity = dao.findByMail(userRegistrationDTO.getMail());
+            userEntity = dao.findByMail(userRegistrationDTO.getMail().toLowerCase());
             userEntity.setCode(code.toString());
             dao.save(userEntity);
-            post(userRegistrationDTO.getMail(), "Verification", code.toString());
+            post(userRegistrationDTO.getMail().toLowerCase(), "Verification", code.toString());
         }
     }
 
     @Override
     public void verification(String code, String mail) {
-        UserEntity userEntity = dao.findByMail(mail);
+        UserEntity userEntity = dao.findByMail(mail.toLowerCase());
         if (userEntity != null && code.equals(userEntity.getCode())) {
             userEntity.setStatus(new StatusEntity((UserStatus.ACTIVATED)));
             userEntity.setCode(null);

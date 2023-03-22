@@ -46,6 +46,7 @@ public class UserService implements IUserService {
         } else {
             String encode = encoder.encode(userDTO.getPassword());
             userDTO.setPassword(encode);
+            userDTO.setMail(userDTO.getMail().toLowerCase());
             userEntity = conversionService.convert(userDTO, UserEntity.class);
             dao.save(Objects.requireNonNull(userEntity));
         }
@@ -74,7 +75,7 @@ public class UserService implements IUserService {
     public void update(UpdateUserDTO updateUserDto) {
         UserEntity userEntity = dao.findById(updateUserDto.getUuid()).orElseThrow(() -> new NotFoundException("Такого юзера не существует"));
         if (userEntity.getDtUpdate().toEpochMilli() == updateUserDto.getDtUpdate().toEpochMilli()) {
-            userEntity.setMail(updateUserDto.getUserDTO().getMail());
+            userEntity.setMail(updateUserDto.getUserDTO().getMail().toLowerCase());
             userEntity.setFio(updateUserDto.getUserDTO().getFio());
             userEntity.setPassword(updateUserDto.getUserDTO().getPassword());
             userEntity.setRole(new RoleEntity(updateUserDto.getUserDTO().getRole()));
@@ -87,7 +88,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserDTO getUser(String mail) {
-        UserEntity userEntity = this.dao.findByMail(mail);
+        UserEntity userEntity = this.dao.findByMail(mail.toLowerCase());
         if (userEntity == null) {
             throw new NotFoundException("Такого юзера не существует");
         }

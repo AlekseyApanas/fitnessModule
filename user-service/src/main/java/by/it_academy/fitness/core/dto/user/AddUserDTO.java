@@ -64,6 +64,10 @@ public class AddUserDTO {
         this.password = password;
     }
 
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
