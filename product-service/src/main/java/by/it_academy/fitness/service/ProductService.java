@@ -1,5 +1,8 @@
 package by.it_academy.fitness.service;
 
+import by.it_academy.fitness.audit.Audit;
+import by.it_academy.fitness.audit.AuditEnum;
+import by.it_academy.fitness.audit.AuditTypeEnum;
 import by.it_academy.fitness.core.dto.page.PageDTO;
 import by.it_academy.fitness.core.dto.product.AddProductDTO;
 import by.it_academy.fitness.core.dto.product.ProductDTO;
@@ -9,7 +12,6 @@ import by.it_academy.fitness.core.exception.CheckVersionException;
 import by.it_academy.fitness.core.exception.NotFoundException;
 import by.it_academy.fitness.dao.api.product.IProductDao;
 import by.it_academy.fitness.entity.ProductEntity;
-import by.it_academy.fitness.service.api.product.IAuditService;
 import by.it_academy.fitness.service.api.product.IProductService;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
@@ -23,24 +25,22 @@ import java.util.stream.Collectors;
 public class ProductService implements IProductService {
     private final IProductDao dao;
     private final ConversionService conversionService;
-    private final IAuditService iAuditService;
 
-    public ProductService(IProductDao dao, ConversionService conversionService, IAuditService iAuditService) {
+    public ProductService(IProductDao dao, ConversionService conversionService) {
         this.dao = dao;
         this.conversionService = conversionService;
-        this.iAuditService = iAuditService;
     }
 
     @Override
-    public void create(AddProductDTO productDTO) {
+    @Audit(value=AuditEnum.CREATED,type = AuditTypeEnum.PRODUCT)
+    public UUID create(AddProductDTO productDTO) {
         ProductEntity productEntity = dao.findByTitle(productDTO.getTitle());
         if (productEntity != null) {
             throw new CheckDoubleException("Продукт с таким названием уже существует");
         } else {
             dao.save(Objects.requireNonNull(conversionService.convert(productDTO, ProductEntity.class)));
         }
-        UUID uuidProduct = getUUID(productDTO.getTitle());
-        iAuditService.checkUserAndSend("Создана запись в журнале продуктов", "PRODUCT", uuidProduct);
+        return getUUID(productDTO.getTitle());
     }
 
     @Override
@@ -54,7 +54,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void update(UpdateProductDTO productDTO) {
+    @Audit(value=AuditEnum.UPDATE,type = AuditTypeEnum.PRODUCT)
+    public UUID update(UpdateProductDTO productDTO) {
         ProductEntity productEntity = dao.findById(productDTO.getUuid()).orElseThrow(() -> new NotFoundException("Такого продукта не существует"));
         if (productEntity.getDtUpdate().toEpochMilli() == productDTO.getDtUpdate().toEpochMilli()) {
             productEntity.setTitle(productDTO.getAddProductDTO().getTitle());
@@ -65,8 +66,7 @@ public class ProductService implements IProductService {
             productEntity.setCarbohydrates(productDTO.getAddProductDTO().getCarbohydrates());
             dao.save(productEntity);
         } else throw new CheckVersionException("Такой версии не существует");
-        UUID uuidProduct = getUUID(productDTO.getAddProductDTO().getTitle());
-        iAuditService.checkUserAndSend("Обновлена запись в журнале продуктов", "PRODUCT", uuidProduct);
+        return getUUID(productDTO.getAddProductDTO().getTitle());
     }
 
     @Override

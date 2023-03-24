@@ -4,11 +4,13 @@ import by.it_academy.fitness.core.dto.page.PageDTO;
 import by.it_academy.fitness.core.dto.recipe.AddRecipeDTO;
 import by.it_academy.fitness.core.dto.recipe.UpdateRecipeDTO;
 
+import java.util.UUID;
+
 
 public interface IRecipeService<T> {
-    void create(AddRecipeDTO recipeDTO);
+    UUID create(AddRecipeDTO recipeDTO);
 
     PageDTO<T> get(int page, int size);
 
-    void update(UpdateRecipeDTO recipeDTO);
+    UUID update(UpdateRecipeDTO recipeDTO);
 }

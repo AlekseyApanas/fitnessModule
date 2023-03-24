@@ -9,11 +9,11 @@ import java.util.UUID;
 
 
 public interface IProductService<T> {
-    void create(AddProductDTO productDTO);
+    UUID create(AddProductDTO productDTO);
 
     PageDTO<T> get(int page, int size);
 
-    void update(UpdateProductDTO productDTO);
+    UUID update(UpdateProductDTO productDTO);
 
     ProductDTO get(UUID id);
 }

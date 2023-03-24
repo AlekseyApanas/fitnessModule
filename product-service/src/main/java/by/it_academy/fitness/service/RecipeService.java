@@ -1,5 +1,8 @@
 package by.it_academy.fitness.service;
 
+import by.it_academy.fitness.audit.Audit;
+import by.it_academy.fitness.audit.AuditEnum;
+import by.it_academy.fitness.audit.AuditTypeEnum;
 import by.it_academy.fitness.core.dto.page.PageDTO;
 import by.it_academy.fitness.core.dto.recipe.AddRecipeDTO;
 import by.it_academy.fitness.core.dto.recipe.RecipeDTO;
@@ -14,7 +17,6 @@ import by.it_academy.fitness.dao.api.product.IRecipeDao;
 import by.it_academy.fitness.entity.IngredientEntity;
 import by.it_academy.fitness.entity.ProductEntity;
 import by.it_academy.fitness.entity.RecipeEntity;
-import by.it_academy.fitness.service.api.product.IAuditService;
 import by.it_academy.fitness.service.api.product.IProductService;
 import by.it_academy.fitness.service.api.product.IRecipeService;
 
@@ -31,17 +33,16 @@ public class RecipeService implements IRecipeService {
     private final IRecipeDao dao;
     private final IProductService productService;
     private final ConversionService conversionService;
-    private final IAuditService iAuditService;
 
-    public RecipeService(IRecipeDao dao, IProductService productService, ConversionService conversionService, IAuditService iAuditService) {
+    public RecipeService(IRecipeDao dao, IProductService productService, ConversionService conversionService) {
         this.dao = dao;
         this.productService = productService;
         this.conversionService = conversionService;
-        this.iAuditService = iAuditService;
     }
 
     @Override
-    public void create(AddRecipeDTO recipeDTO) {
+    @Audit(value= AuditEnum.CREATED,type = AuditTypeEnum.RECIPE)
+    public UUID create(AddRecipeDTO recipeDTO) {
         RecipeEntity recipeEntity = dao.findByTitle(recipeDTO.getTitle());
         if (recipeEntity != null) {
             throw new CheckDoubleException("Рецепт с таким названием уже существует");
@@ -55,7 +56,7 @@ public class RecipeService implements IRecipeService {
             dao.save(new RecipeEntity(savedRecipeDTO.getUuid(), savedRecipeDTO.getDtCreate(),
                     savedRecipeDTO.getDtUpdate(), savedRecipeDTO.getAddRecipeDTO().getTitle(),
                     list));
-            iAuditService.checkUserAndSend("Создана запись в журнале рецептов", "RECIPE", savedRecipeDTO.getUuid());
+            return savedRecipeDTO.getUuid();
         }
     }
 
@@ -88,7 +89,8 @@ public class RecipeService implements IRecipeService {
 
 
     @Override
-    public void update(UpdateRecipeDTO recipeDTO) {
+    @Audit(value=AuditEnum.UPDATE,type = AuditTypeEnum.RECIPE)
+    public UUID update(UpdateRecipeDTO recipeDTO) {
         RecipeEntity recipeEntity = dao.findById(recipeDTO.getUuid()).orElseThrow(() -> new NotFoundException("Такого рецепта не существует"));
         checkIngredient(recipeDTO.getAddRecipeDTO().getComposition());
         if (recipeDTO.getDtUpdate().toEpochMilli() == recipeEntity.getDtUpdate().toEpochMilli()) {
@@ -100,7 +102,7 @@ public class RecipeService implements IRecipeService {
             recipeEntity.setComposition(list);
             dao.save(recipeEntity);
         } else throw new CheckVersionException("Такой версии не существует");
-        iAuditService.checkUserAndSend("Обновлена запись в журнале рецептов", "RECIPE", recipeDTO.getUuid());
+        return recipeDTO.getUuid();
     }
 
     private void checkIngredient(List<AddIngredientDTO> addIngredientDTOS) {

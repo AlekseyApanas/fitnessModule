@@ -3,7 +3,6 @@ package by.it_academy.fitness.config;
 import by.it_academy.fitness.dao.api.user.IAuthenticationDao;
 import by.it_academy.fitness.dao.api.user.IUserDao;
 import by.it_academy.fitness.service.*;
-import by.it_academy.fitness.service.api.user.IAuditService;
 import by.it_academy.fitness.service.api.user.IAuthenticationService;
 import by.it_academy.fitness.service.api.user.IUserService;
 import org.springframework.context.annotation.Bean;
@@ -21,13 +20,8 @@ public class SpringConfig {
     }
 
     @Bean
-    public IAuditService iAuditService() {
-        return new AuditService();
-    }
-
-    @Bean
-    public IUserService userService(IUserDao dao, ConversionService conversionService, PasswordEncoder encoder, IAuditService iAuditService) {
-        return new UserService(dao, conversionService, encoder, iAuditService);
+    public IUserService userService(IUserDao dao, ConversionService conversionService, PasswordEncoder encoder) {
+        return new UserService(dao, conversionService, encoder);
     }
 
     @Bean

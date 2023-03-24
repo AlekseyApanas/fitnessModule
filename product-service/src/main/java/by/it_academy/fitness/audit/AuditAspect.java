@@ -1,12 +1,13 @@
-package by.it_academy.fitness.service;
+package by.it_academy.fitness.audit;
 
-import by.it_academy.fitness.core.dto.user.UserDTO;
-import by.it_academy.fitness.service.api.user.IAuditService;
+import by.it_academy.fitness.core.dto.audit.UserDTO;
 import by.it_academy.fitness.web.utils.UserHolder;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,29 +16,34 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.UUID;
 
-public class AuditService implements IAuditService {
+@Aspect
+@Component
+public class AuditAspect {
     @Value("${spring.data.redis.urlaudit}")
     private String url;
 
-    @Override
-    public void checkUserAndSend(String mail, String actions, UserDTO userDTO) {
+    @AfterReturning(
+            pointcut = "@annotation(audit)",
+            argNames = "audit, uuid", returning = "uuid")
+    public void checkUserAndSend(Audit audit, UUID uuid) {
+        AuditEnum actions = audit.value();
+        AuditTypeEnum type = audit.type();
         UserHolder userHolder = new UserHolder();
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDTO user = principal instanceof String ? userDTO : userHolder.getUser();
-        sendAudit(userDTO, user.getUuid(), actions);
+        UserDTO user = userHolder.getUser();
+        sendAudit(user, uuid, actions.getDescription(), type.toString());
     }
 
-    private void sendAudit(UserDTO userDto, UUID uuid, String actions) {
+    private void sendAudit(UserDTO userDto, UUID uuid, String actions, String type) {
         try {
             JSONObject user = new JSONObject();
             user.put("uuidUser", userDto.getUuid());
             user.put("mail", userDto.getMail());
             user.put("fio", userDto.getFio());
-            user.put("role", userDto.getRole());
+            user.put("role", userDto.getRole().substring(5));
             JSONObject object = new JSONObject();
             object.put("user", user);
             object.put("text", actions);
-            object.put("type", "USER");
+            object.put("type", type);
             object.put("uuidService", uuid);
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()

@@ -1,11 +1,14 @@
-package by.it_academy.fitness.service;
+package by.it_academy.fitness.audit;
 
-import by.it_academy.fitness.core.dto.audit.UserDTO;
+import by.it_academy.fitness.core.dto.user.UserDTO;
 import by.it_academy.fitness.web.utils.UserHolder;
-import by.it_academy.fitness.service.api.product.IAuditService;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URI;
@@ -14,29 +17,35 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.UUID;
 
-public class AuditService implements IAuditService {
+@Aspect
+@Component
+public class AuditAspect {
     @Value("${spring.data.redis.urlaudit}")
     private String url;
-    @Override
-    public void checkUserAndSend(String actions,String type,UUID uuidService ) {
+
+    @AfterReturning(
+            pointcut = "@annotation(audit)",
+            argNames = "audit, userDTO", returning = "userDTO")
+    public void checkUserAndSend(Audit audit, UserDTO userDTO) {
         UserHolder userHolder = new UserHolder();
-        UserDTO user = userHolder.getUser();
-        send(user, actions,type,uuidService);
+        AuditEnum actions = audit.value();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO user = principal instanceof String ? userDTO : userHolder.getUser();
+        sendAudit(userDTO, user.getUuid(), actions.toString());
     }
 
-
-    private void send(UserDTO userDto, String actions,String type,UUID uuidService) {
+    private void sendAudit(UserDTO userDto, UUID uuid, String actions) {
         try {
             JSONObject user = new JSONObject();
             user.put("uuidUser", userDto.getUuid());
             user.put("mail", userDto.getMail());
             user.put("fio", userDto.getFio());
-            user.put("role", userDto.getRole().substring(5));
+            user.put("role", userDto.getRole());
             JSONObject object = new JSONObject();
             object.put("user", user);
             object.put("text", actions);
-            object.put("type",type);
-            object.put("uuidService", uuidService);
+            object.put("type", "USER");
+            object.put("uuidService", uuid);
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
@@ -48,5 +57,4 @@ public class AuditService implements IAuditService {
             throw new RuntimeException(e);
         }
     }
-
 }

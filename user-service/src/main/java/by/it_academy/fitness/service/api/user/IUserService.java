@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface IUserService<T> {
 
-    void create(AddUserDTO userDTO);
+    UserDTO create(AddUserDTO userDTO);
 
     PageDTO<T> get(int page, int size);
 
@@ -18,6 +18,6 @@ public interface IUserService<T> {
 
     UserDTO getUser(String mail);
 
-    void update(UpdateUserDTO updateUserDto);
+    UserDTO update(UpdateUserDTO updateUserDto);
 
 }
