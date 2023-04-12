@@ -1,8 +1,8 @@
 package by.it_academy.fitness.web.controllers;
 
 import by.it_academy.fitness.core.dto.page.PageDTO;
-import by.it_academy.fitness.core.dto.product.AddProductDTO;
-import by.it_academy.fitness.core.dto.product.UpdateProductDTO;
+import by.it_academy.fitness.core.dto.report.AddProductDTO;
+import by.it_academy.fitness.core.dto.report.UpdateProductDTO;
 import by.it_academy.fitness.service.api.product.IProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;

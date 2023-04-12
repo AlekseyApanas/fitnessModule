@@ -14,10 +14,10 @@ public class RecipeEntity {
     @Id
     @Column(name = "uuid")
     private UUID uuid;
-    @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
+    @JsonSerialize(converter = InstantToLongConverter.class)
     @Column(name = "dt_create")
     private Instant dtCreate;
-    @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
+    @JsonSerialize(converter = InstantToLongConverter.class)
     @Version
     @Column(name = "dt_update")
     private Instant dtUpdate;

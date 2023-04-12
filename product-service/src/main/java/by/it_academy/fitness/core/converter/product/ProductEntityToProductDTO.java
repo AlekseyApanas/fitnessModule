@@ -1,6 +1,6 @@
 package by.it_academy.fitness.core.converter.product;
 
-import by.it_academy.fitness.core.dto.product.ProductDTO;
+import by.it_academy.fitness.core.dto.report.ProductDTO;
 import by.it_academy.fitness.entity.ProductEntity;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

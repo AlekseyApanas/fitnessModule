@@ -1,4 +1,4 @@
-package by.it_academy.fitness.core.dto.product;
+package by.it_academy.fitness.core.dto.report;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;

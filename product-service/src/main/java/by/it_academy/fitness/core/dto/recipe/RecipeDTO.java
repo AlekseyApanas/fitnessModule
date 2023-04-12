@@ -15,10 +15,10 @@ import java.util.UUID;
 public class RecipeDTO {
     @JsonProperty("uuid")
     private UUID uuid;
-    @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
+    @JsonSerialize(converter = InstantToLongConverter.class)
     @JsonProperty("dt_create")
     private Instant dtCreate;
-    @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
+    @JsonSerialize(converter = InstantToLongConverter.class)
     @JsonProperty("dt_update")
     private Instant dtUpdate;
     @JsonProperty("title")

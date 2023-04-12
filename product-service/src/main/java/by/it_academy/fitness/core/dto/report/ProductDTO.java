@@ -1,4 +1,4 @@
-package by.it_academy.fitness.core.dto.product;
+package by.it_academy.fitness.core.dto.report;
 
 
 import by.it_academy.fitness.core.converter.DoubleToBigDecimalConverter;
@@ -12,10 +12,10 @@ import java.util.UUID;
 public class ProductDTO {
     @JsonProperty("uuid")
     private UUID uuid;
-    @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
+    @JsonSerialize(converter = InstantToLongConverter.class)
     @JsonProperty("dtCreate")
     private Instant dtCreate;
-    @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
+    @JsonSerialize(converter = InstantToLongConverter.class)
     @JsonProperty("dtUpdate")
     private Instant dtUpdate;
     @JsonProperty("title")

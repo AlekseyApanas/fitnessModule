@@ -15,7 +15,7 @@ public class AuditDTO {
 
     @JsonProperty("uuid")
     private UUID uuid;
-    @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
+    @JsonSerialize(converter = InstantToLongConverter.class)
     @JsonProperty("dtCreate")
     private Instant dtCreate;
     @NotNull

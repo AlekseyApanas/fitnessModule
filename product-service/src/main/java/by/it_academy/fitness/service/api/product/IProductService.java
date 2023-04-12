@@ -1,9 +1,9 @@
 package by.it_academy.fitness.service.api.product;
 
 import by.it_academy.fitness.core.dto.page.PageDTO;
-import by.it_academy.fitness.core.dto.product.AddProductDTO;
-import by.it_academy.fitness.core.dto.product.ProductDTO;
-import by.it_academy.fitness.core.dto.product.UpdateProductDTO;
+import by.it_academy.fitness.core.dto.report.AddProductDTO;
+import by.it_academy.fitness.core.dto.report.ProductDTO;
+import by.it_academy.fitness.core.dto.report.UpdateProductDTO;
 
 import java.util.UUID;
 

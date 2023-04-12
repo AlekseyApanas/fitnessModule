@@ -14,10 +14,10 @@ public class ProductEntity {
     @Column(name = "uuid")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
-    @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
+    @JsonSerialize(converter = InstantToLongConverter.class)
     @Column(name = "dt_create")
     private Instant dtCreate;
-    @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
+    @JsonSerialize(converter = InstantToLongConverter.class)
 
     @Column(name = "dt_update")
     @Version

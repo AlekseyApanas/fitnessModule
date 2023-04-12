@@ -18,10 +18,10 @@ import java.util.UUID;
 public class UserDTO implements UserDetails {
     @JsonProperty("uuid")
     private UUID uuid;
-    @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
+    @JsonSerialize(converter = InstantToLongConverter.class)
     @JsonProperty("dtCreate")
     private Instant dtCreate;
-    @JsonSerialize(converter = InstantToLongConverter.Serializer.class)
+    @JsonSerialize(converter = InstantToLongConverter.class)
     @JsonProperty("dtUpdate")
     private Instant dtUpdate;
     @JsonProperty("mail")

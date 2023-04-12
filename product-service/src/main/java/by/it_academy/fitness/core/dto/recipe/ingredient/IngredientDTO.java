@@ -1,7 +1,7 @@
 package by.it_academy.fitness.core.dto.recipe.ingredient;
 
 import by.it_academy.fitness.core.converter.DoubleToBigDecimalConverter;
-import by.it_academy.fitness.core.dto.product.ProductDTO;
+import by.it_academy.fitness.core.dto.report.ProductDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
