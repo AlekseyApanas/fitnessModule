@@ -17,7 +17,7 @@ public class EmailController {
         this.service = service;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<?> send(@Valid @RequestBody EmailDTO emailDTO) {
         service.sendSimpleEmail(emailDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();

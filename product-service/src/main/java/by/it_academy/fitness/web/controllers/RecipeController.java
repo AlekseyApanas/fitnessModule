@@ -25,7 +25,7 @@ public class RecipeController {
         this.iRecipeService = iRecipeService;
     }
 
-    @RequestMapping(path = "/{uuid}/dt_update/{dt_update}", method = RequestMethod.PUT)
+    @PutMapping(path = "/{uuid}/dt_update/{dt_update}")
     public ResponseEntity<?> update(@PathVariable("uuid") UUID userUUID,
                                     @PathVariable("dt_update") Instant dtUpdate,
                                     @RequestBody @Valid AddRecipeDTO addRecipeDTO) {
@@ -33,13 +33,13 @@ public class RecipeController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid AddRecipeDTO addRecipeDTO) {
         iRecipeService.create(addRecipeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<PageDTO> get(@RequestParam(defaultValue = "0") @Min(0) int page, @RequestParam(defaultValue = "20") @Min(0) int size) {
         return ResponseEntity.status(HttpStatus.OK).body(iRecipeService.get(page, size));
     }

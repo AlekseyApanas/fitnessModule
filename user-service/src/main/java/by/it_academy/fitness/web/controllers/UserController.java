@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -29,12 +30,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping(path = "/{uuid}", method = RequestMethod.GET)
+    @GetMapping(path = "/{uuid}")
     public ResponseEntity<UserDTO> get(@PathVariable("uuid") UUID userUUID) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.get(userUUID));
     }
 
-    @RequestMapping(path = "/{uuid}/dt_update/{dt_update}", method = RequestMethod.PUT)
+    @PutMapping(path = "/{uuid}/dt_update/{dt_update}")
     public ResponseEntity<?> update(@PathVariable("uuid") UUID userUUID,
                                     @PathVariable("dt_update") Instant dtUpdate,
                                     @RequestBody @Valid AddUserDTO userDTO) {
@@ -42,13 +43,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid AddUserDTO usersDTO) {
         userService.create(usersDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<PageDTO> get(@RequestParam(defaultValue = "0") @Min(0) int page, @RequestParam(defaultValue = "20") @Min(0) int size) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.get(page, size));
     }

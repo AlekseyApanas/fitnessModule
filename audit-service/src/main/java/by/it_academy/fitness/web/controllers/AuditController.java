@@ -26,18 +26,18 @@ public class AuditController {
         this.iAuditService = iAuditService;
     }
 
-    @RequestMapping(path = "/{uuid}", method = RequestMethod.GET)
+    @GetMapping(path = "/{uuid}")
     public ResponseEntity<AuditDTO> get(@PathVariable("uuid") UUID userUUID) {
         return ResponseEntity.status(HttpStatus.OK).body(iAuditService.get(userUUID));
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid AuditDTO auditDTO) {
         iAuditService.create(new AuditDTO(auditDTO.getUser(), auditDTO.getText(), auditDTO.getType(), auditDTO.getUuidService()));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<PageDTO> get(@RequestParam(defaultValue = "0") @Min(0) int page, @RequestParam(defaultValue = "20") @Min(0) int size) {
         return ResponseEntity.status(HttpStatus.OK).body(iAuditService.get(page, size));
     }

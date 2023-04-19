@@ -27,25 +27,25 @@ public class AuthenticationController {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
-    @RequestMapping(path = "/registration", method = RequestMethod.POST)
+    @PostMapping(path = "/registration")
     public ResponseEntity<?> registration(@RequestBody @Valid UserRegistrationDTO userRegistrationDTO) {
         service.registration(userRegistrationDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @RequestMapping(path = "/verification", method = RequestMethod.GET)
+    @GetMapping(path = "/verification")
     public ResponseEntity<?> verification(@RequestParam("code") @NotBlank String code, @RequestParam("mail") @Email String mail) {
         service.verification(code, mail);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @RequestMapping(path = "/login", method = RequestMethod.POST)
+    @PostMapping(path = "/login")
     public ResponseEntity<String> logIn(@RequestBody @Valid UserLogInDTO userLogInDTO) {
         UserDTO userDTO = service.logIn(userLogInDTO);
         return ResponseEntity.status(HttpStatus.OK).body(jwtTokenUtil.generateToken(userDTO));
     }
 
-    @RequestMapping(path = "/me", method = RequestMethod.GET)
+    @GetMapping(path = "/me")
     public ResponseEntity<UserDTO> get() {
         UserHolder userHolder = new UserHolder();
         return ResponseEntity.status(HttpStatus.OK).body(userHolder.getUser());
