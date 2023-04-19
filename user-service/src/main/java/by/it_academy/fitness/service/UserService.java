@@ -40,7 +40,7 @@ public class UserService implements IUserService {
     @Override
     @Audit(AuditEnum.CREATED)
     public UserDTO create(AddUserDTO userDTO) {
-        UserEntity userEntity = dao.findByMail(userDTO.getMail());
+        UserEntity userEntity = dao.findByMail(userDTO.getMail().toLowerCase());
         if (userEntity != null) {
             throw new CheckDoubleException("Юзер с таким mail уже существует");
         } else {
